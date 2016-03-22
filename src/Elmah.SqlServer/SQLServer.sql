@@ -80,7 +80,8 @@ GO
 /* ------------------------------------------------------------------------ 
         TABLES
    ------------------------------------------------------------------------ */
-
+IF  NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ELMAH_Error]') AND type in (N'U'))
+BEGIN
 CREATE TABLE [dbo].[ELMAH_Error]
 (
     [ErrorId]     UNIQUEIDENTIFIER NOT NULL,
@@ -97,15 +98,11 @@ CREATE TABLE [dbo].[ELMAH_Error]
 ) 
 ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-GO
-
 ALTER TABLE [dbo].[ELMAH_Error] WITH NOCHECK ADD 
     CONSTRAINT [PK_ELMAH_Error] PRIMARY KEY NONCLUSTERED ([ErrorId]) ON [PRIMARY] 
-GO
 
 ALTER TABLE [dbo].[ELMAH_Error] ADD 
     CONSTRAINT [DF_ELMAH_Error_ErrorId] DEFAULT (NEWID()) FOR [ErrorId]
-GO
 
 CREATE NONCLUSTERED INDEX [IX_ELMAH_Error_App_Time_Seq] ON [dbo].[ELMAH_Error] 
 (
@@ -114,6 +111,7 @@ CREATE NONCLUSTERED INDEX [IX_ELMAH_Error_App_Time_Seq] ON [dbo].[ELMAH_Error]
     [Sequence]      DESC
 ) 
 ON [PRIMARY]
+END
 GO
 
 /* ------------------------------------------------------------------------ 
